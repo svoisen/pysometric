@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pysometric"
+authors = [
+    { name = "Sean Voisen", email = "sean@voisen.org" },
+]
+version = "0.0.1"
+description = "Isometric SVG drawing library." 
+requires-python = ">=3.10"
+dependencies = [
+    "shapely", 
+    "numpy"
+]
