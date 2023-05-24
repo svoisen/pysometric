@@ -1,12 +1,47 @@
 from abc import abstractmethod
 
 import shapely
+import numpy as np
+import math
+
+from pysometric.vector import Vector3
 
 from .plane import Plane
 from .render import RenderableGeometry, project_point
 from .scene import RenderContext
 from .texture import Texture
-from .vector import Vector3
+from .vector import Vector3, Vector2
+
+
+def project_to_plane(point: Vector2, plane: Plane) -> Vector3:
+    """Given a point in 2D space, reverse-project it to 3D on the given plane."""
+    x, y = point
+
+    if plane == Plane.XY:
+        return (x, y, 0)
+
+    if plane == Plane.XZ:
+        return (x, 0, y)
+
+    if plane == Plane.YZ:
+        return (0, x, y)
+
+
+def _regular_polygon_vertices(
+    origin: Vector3, num_vertices: int, radius: float, orientation: Plane
+) -> list[Vector3]:
+    angle = 2 * np.pi / num_vertices
+    vertices = []
+    for i in range(num_vertices):
+        vertices.append((math.cos(i * angle) * radius, math.sin(i * angle) * radius))
+
+    def project_and_translate(v):
+        origin_x, origin_y, origin_z = origin
+        x, y, z = project_to_plane(v, orientation)
+        return (x + origin_x, y + origin_y, z + origin_z)
+
+    vertices = list(map(project_and_translate, vertices))
+    return vertices
 
 
 def _rect_vertices(
@@ -83,6 +118,19 @@ class Polygon(Shape):
     @property
     def textures(self) -> list[Texture]:
         return self._textures
+
+
+class RegularPolygon(Polygon):
+    def __init__(
+        self,
+        origin: Vector3,
+        num_vertices: int,
+        radius: float,
+        orientation: Plane,
+        layer=1,
+    ):
+        vertices = _regular_polygon_vertices(origin, num_vertices, radius, orientation)
+        super().__init__(vertices, layer)
 
 
 class Rectangle(Polygon):
