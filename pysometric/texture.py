@@ -4,9 +4,9 @@ from math import radians
 import shapely
 from vsketch.fill import generate_fill
 
-from .fill import HatchStyle, hatch_fill, line_fill
+from .fill import hatch_fill
 from .plane import Plane
-from .render import RenderContext, RenderableGeometry
+from .render import RenderableGeometry, RenderContext
 
 
 class Texture:
@@ -35,14 +35,12 @@ class HatchTexture(Texture):
         self,
         orientation: Plane,
         pitch: float,
-        style: HatchStyle,
         angle=radians(45),
         inset=0,
         layer=1,
     ) -> None:
         super().__init__(orientation, layer)
         self.pitch = pitch
-        self.style = style
         self.angle = angle
         self.inset = inset
 
@@ -50,21 +48,7 @@ class HatchTexture(Texture):
         self, polygon2d: shapely.Polygon, render_context: RenderContext
     ) -> RenderableGeometry:
         fill_clip = polygon2d if self.inset == 0 else polygon2d.buffer(self.inset * -1)
-        fill = hatch_fill(fill_clip, self.pitch, self.style, self.angle)
-        return RenderableGeometry(fill, self.layer)
-
-
-class LineTexture(Texture):
-    def __init__(self, orientation: Plane, pitch: float, inset=0, layer=1) -> None:
-        super().__init__(orientation, layer)
-        self.pitch = pitch
-        self.inset = inset
-
-    def compile(
-        self, polygon2d: shapely.Polygon, render_context: RenderContext
-    ) -> RenderableGeometry:
-        fill_clip = polygon2d if self.inset == 0 else polygon2d.buffer(self.inset * -1)
-        fill = line_fill(fill_clip, self.pitch)
+        fill = hatch_fill(fill_clip, self.pitch, self.angle)
         return RenderableGeometry(fill, self.layer)
 
 
