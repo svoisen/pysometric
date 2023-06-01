@@ -1,23 +1,34 @@
 import vsketch
-import pysometric
+import pysometric as pyso
 import shapely
 import math
+import numpy as np
 
 class Example02Sketch(vsketch.SketchClass):
     unit_size = vsketch.Param(0.25, unit="in")
+    hexagon_radius = vsketch.Param(1)
+
+    def create_hexagons(self):
+        apothem = math.sqrt(3) * self.hexagon_radius / 2
+        hexagons = []
+        rotation = pyso.Rotation(pyso.Axis.Z, math.radians(90))
+        y = 0
+        x = 0
+        row_count = 0
+        while y < 10:
+            while x < 10:
+                hexagons.append(pyso.RegularPolygon((x, y, 0), 6, self.hexagon_radius, pyso.Plane.XY, [], [rotation]))
+                x += apothem * 2
+            row_count += 1
+            y += self.hexagon_radius * 1.5
+            x = -apothem if row_count % 2 != 0 else 0 
+
+        return hexagons
 
     def draw(self, vsk: vsketch.Vsketch) -> None:
         vsk.size("a4", landscape=False, center=False)
-
         frame = shapely.box(0, 0, vsk.width, vsk.height)
-        scene = pysometric.Scene(frame, self.unit_size)
-        rect = pysometric.Rectangle((0, 0, 0), 1, 1, pysometric.Plane.XY)
-        p1 = pysometric.RegularPolygon((0, 0, 0), 6, math.sqrt(2) / 2, pysometric.Plane.XY)
-        p2 = pysometric.RegularPolygon((0, 0, -3), 6, math.sqrt(2) / 2, pysometric.Plane.XY)
-
-        scene.add(p1)
-        scene.add(p2)
-        scene.add(rect)
+        scene = pyso.Scene(frame, self.unit_size, self.create_hexagons())
         scene.render(vsk)
 
 

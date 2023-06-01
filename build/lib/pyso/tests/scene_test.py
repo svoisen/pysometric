@@ -2,7 +2,7 @@ import pytest
 import shapely
 
 from ..scene import Scene
-from ..volume import Box
+from ..shape import Box
 
 @pytest.fixture
 def frame():
@@ -10,6 +10,7 @@ def frame():
 
 class TestScene:
     def test_add(self, frame):
+        s = Scene(frame, 100)
         b = Box((0, 0, 0))
-        s = Scene(frame, 100, [b])
+        s.add(b)
         assert len(s.children) == 1
