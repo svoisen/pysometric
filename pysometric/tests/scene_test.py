@@ -2,6 +2,7 @@ import pytest
 import shapely
 
 from ..scene import Scene
+from ..shape import Rectangle
 from ..volume import Box
 
 @pytest.fixture
