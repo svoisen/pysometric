@@ -5,7 +5,6 @@ import shapely
 from vsketch.fill import generate_fill
 
 from .fill import hatch_fill
-from .plane import Plane
 from .render import RenderableGeometry, RenderContext
 
 
@@ -49,7 +48,9 @@ class HatchTexture(Texture):
     def compile(
         self, polygon2d: shapely.Polygon, render_context: RenderContext
     ) -> RenderableGeometry:
-        fill_clip = polygon2d if self._inset == 0 else polygon2d.buffer(self._inset * -1)
+        fill_clip = (
+            polygon2d if self._inset == 0 else polygon2d.buffer(self._inset * -1)
+        )
         fill = hatch_fill(fill_clip, self._pitch, self._angle)
         return RenderableGeometry(fill, self._layer)
 
@@ -63,6 +64,8 @@ class FillTexture(Texture):
     def compile(
         self, polygon2d: shapely.Polygon, render_context: RenderContext
     ) -> RenderableGeometry:
-        fill_clip = polygon2d if self._inset == 0 else polygon2d.buffer(self._inset * -1)
+        fill_clip = (
+            polygon2d if self._inset == 0 else polygon2d.buffer(self._inset * -1)
+        )
         fill = generate_fill(fill_clip, self._pen_width, 1.0).as_mls()
         return RenderableGeometry(fill, self._layer)
