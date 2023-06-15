@@ -1,18 +1,18 @@
+import math
 from abc import abstractmethod
 
-import shapely
 import numpy as np
-import math
+import shapely
 
 from pysometric.vector import Vector3
 
 from .axis import Axis
+from .matrix import rotate_x, rotate_y, rotate_z
 from .plane import Plane
 from .render import RenderableGeometry, project_point
 from .scene import RenderContext
 from .texture import Texture
-from .vector import Vector3, Vector2
-from .matrix import rotate_x, rotate_y, rotate_z
+from .vector import Vector2, Vector3
 
 
 def project_to_plane(point: Vector2, plane: Plane) -> Vector3:
@@ -104,9 +104,10 @@ def _rect_vertices(
 
 
 class Rotation:
-    def __init__(self, axis: Axis, angle: float):
+    def __init__(self, axis: Axis, angle: float, origin: Vector3):
         self._axis = axis
         self._angle = angle
+        self._origin = origin
 
     @property
     def axis(self):
@@ -115,6 +116,10 @@ class Rotation:
     @property
     def angle(self):
         return self._angle
+
+    @property
+    def origin(self):
+        return self._origin
 
 
 class Renderable:
@@ -141,24 +146,6 @@ class Renderable:
     def vertices(self) -> list[Vector3]:
         return self._vertices
 
-    def _apply_rotations(self, center: Vector3):
-        for rotation in self.rotations:
-            match rotation.axis:
-                case Axis.X:
-                    self._vertices = _rotate_vertices_x(
-                        self._vertices, rotation.angle, center
-                    )
-
-                case Axis.Y:
-                    self._vertices = _rotate_vertices_y(
-                        self._vertices, rotation.angle, center
-                    )
-
-                case Axis.Z:
-                    self._vertices = _rotate_vertices_z(
-                        self._vertices, rotation.angle, center
-                    )
-
 
 class Polygon(Renderable):
     def __init__(
@@ -171,6 +158,7 @@ class Polygon(Renderable):
         super().__init__(rotations, layer)
         self._vertices = vertices
         self._textures = textures
+        self._apply_rotations()
 
     def compile(self, render_context: RenderContext) -> list[RenderableGeometry]:
         polygon2d = shapely.Polygon(
@@ -185,6 +173,24 @@ class Polygon(Renderable):
     @property
     def textures(self) -> list[Texture]:
         return self._textures
+
+    def _apply_rotations(self):
+        for rotation in self.rotations:
+            match rotation.axis:
+                case Axis.X:
+                    self._vertices = _rotate_vertices_x(
+                        self._vertices, rotation.angle, rotation.origin
+                    )
+
+                case Axis.Y:
+                    self._vertices = _rotate_vertices_y(
+                        self._vertices, rotation.angle, rotation.origin
+                    )
+
+                case Axis.Z:
+                    self._vertices = _rotate_vertices_z(
+                        self._vertices, rotation.angle, rotation.origin
+                    )
 
 
 class RegularPolygon(Polygon):
@@ -202,7 +208,6 @@ class RegularPolygon(Polygon):
     ):
         vertices = _regular_polygon_vertices(origin, num_vertices, radius, orientation)
         super().__init__(vertices, textures, rotations, layer)
-        self._apply_rotations(origin)
 
 
 class Rectangle(Polygon):
@@ -222,10 +227,14 @@ class Rectangle(Polygon):
         rotations: list[Rotation] = [],
         layer=1,
     ):
-        super().__init__(_rect_vertices(origin, width, height, orientation), textures, rotations, layer)
+        super().__init__(
+            _rect_vertices(origin, width, height, orientation),
+            textures,
+            rotations,
+            layer,
+        )
         self._width = width
         self._height = height
-        self._apply_rotations(origin)
 
     @property
     def width(self):
@@ -236,9 +245,8 @@ class Rectangle(Polygon):
         return self._height
 
 
-class Group(Renderable):
-    def __init__(self, children: list[Renderable], layer=1) -> None:
-        super().__init__([], layer)
+class Group:
+    def __init__(self, children: list[Renderable]) -> None:
         self._children = children
 
     @property
