@@ -11,13 +11,13 @@ It is currently intended to be used in conjunction with the [vsketch](https://gi
 * Supports textures (e.g. hatch and solid fills) on any polygon
 * Automatically occludes lines (hidden line removal) based on scene z-order
 
-## Getting Started
+# Getting Started
 
-### Required dependencies
+## Required dependencies
 
 `Pysometric` currently requires [vsketch](https://github.com/abey79/vsketch) for rendering. You will need to install `vsketch` before using this library. 
 
-### Installation
+## Installation
 
 To get started with Pysometric, clone the repository and install it using `pip`:
 
@@ -27,7 +27,7 @@ $ cd pysometric
 $ pip install .
 ```
 
-### Examples
+## Examples
 
 Once the library is installed you can create a simple isometric scene using `pysometric` inside a `vsketch` sketch. For example, in the `draw` method of your sketch:
 
@@ -46,7 +46,7 @@ scene.render(vsk)
 
 More examples may be found in the `examples` directory.
 
-### Running tests
+# Running tests
 
 This project uses pytest. Run tests by executing the following in the root directory of the repository:
 
@@ -54,18 +54,18 @@ This project uses pytest. Run tests by executing the following in the root direc
 $ pytest
 ```
 
-## Documentation
+# Documentation
 
-### Using Pysometric
+## Using Pysometric
 
 `Pysometric` is intended for the creation of static isometric 3D scenes as line art. It is not a true 3D system, nor does it support animation. As such, it is intentionally limited by the following constraints:
 
 1. `Pysometric`'s API is immutable. Setup your scene once, then render it. That's it. Because it does not support animation, scenes, shapes and volumes in `pysometric` cannot be modified after their initial creation.
 2. `Pysometric` has no concept of light sources. Shadows can be emulated using hatching or fill textures on polygons, but they cannot be generated automatically for a shape or entire scene based on lighting.
 
-### API
+## API
 
-#### Scene
+### Scene
 
 A `Scene` defines an isometric 3D scene that can be rendered to 2D line art. All shapes to be rendered by `pysometric` must be part of a scene. When creating a `Scene` you must specify:
 
@@ -75,7 +75,7 @@ A `Scene` defines an isometric 3D scene that can be rendered to 2D line art. All
 
 The `Scene` has a `render` method that accepts a `Vsketch` instance as a parameter and outputs the scene to the given sketch.
 
-#### Axes, Planes and Coordinates
+### Axes, Planes and Coordinates
 
 All 3D coordinates should be specified as `Vector3` objects defining (x, y, z) positions. Axes in `pysometric` are as follows:
 
@@ -83,19 +83,19 @@ All 3D coordinates should be specified as `Vector3` objects defining (x, y, z) p
 * y-axis: The axis oriented visually from back to front (at a downward diagonal)
 * z-axis: The vertical axis running from bottom to top
 
-#### Renderable
+### Renderable
 
 The base class for any object that can be added to a Scene. All `Renderables` have a `compile` method which is used during rendering to compile the object into a `RenderableGeometry.`
 
-#### RenderableGeometry
+### RenderableGeometry
 
 A `RenderableGeometry` is the output of the `compile` method for a `Renderable,` and includes information necessary for rendering the object in 2D, such as its 2D geometry, stroke thickness and stroke color (layer).
 
-#### Polygon
+### Polygon
 
 A `Polygon` defines a general polygon shape. It is a subclass of `Renderable`.
 
-##### Initialization
+#### Initialization
 
 A `Polygon` is initialized with:
 
@@ -104,7 +104,7 @@ A `Polygon` is initialized with:
 * `rotations`: Optional list of `Rotation` objects to rotate the polygon.
 * `layer`: The layer for the polygon. Default is 1.
 
-##### Example
+#### Example
 
 The following example creates a square polygon with vertices at (0, 0, 0), (10, 0, 0), (10, 10, 0) and (0, 10, 0):
 
@@ -117,11 +117,11 @@ polygon = Polygon([
 ])
 ```
 
-#### RegularPolygon
+### RegularPolygon
 
 The `RegularPolygon` defines a symmetrical polygon with a specific number of sides. It is a subclass of `Polygon` and `Renderable`.
 
-##### Initialization
+#### Initialization
 
 A `RegularPolygon` is initialized with:
 
@@ -133,7 +133,7 @@ A `RegularPolygon` is initialized with:
 * `rotations`: Optional list of `Rotation` objects to rotate the polygon.
 * `layer`: The layer for the polygon. Default is 1.
 
-##### Example:
+#### Example:
 
 The following example creates a hexagon with radius 10 at the origin on the plane defined by the X and Y axes.
 
@@ -141,13 +141,13 @@ The following example creates a hexagon with radius 10 at the origin on the plan
 polygon = RegularPolygon((0, 0, 0), 6, 10, Plane.XY)
 ```
 
-#### Rectangle
+### Rectangle
 
 A `Rectangle` defines a rectangular polygon in 3D space. 
 
 By default, rectangles have an orientation parallel to one of the 3 possible planes defined in the `Plane` enumeration.
 
-##### Initialization
+#### Initialization
 
 A `Rectangle` is initialized with:
 
@@ -159,7 +159,7 @@ A `Rectangle` is initialized with:
 * `rotations`: Optional list of `Rotation` objects to rotate the rectangle.
 * `layer`: The layer for the rectangle. Default is 1.
 
-##### Example
+#### Example
 
 The following example creates a rectangle with width 10 and height 5 centered at the origin on the XZ plane:
 
@@ -167,17 +167,17 @@ The following example creates a rectangle with width 10 and height 5 centered at
 rectangle = Rectangle((0, 0, 0), 10, 5, Plane.XZ)
 ```
 
-#### Group
+### Group
 
 A `Group` defines a collection of `Renderable` objects that should be treated as a single object. Groups allow you to organize complex shapes in your scene by combining multiple polygons and volumes.
 
-##### Initialization
+#### Initialization
 
 A `Group` is initialized with:
 
 * `children`: A list of `Renderable` objects (e.g. `Polygon`, `Rectangle`, `Box`, `Prism`) that make up the group.
 
-##### Example
+#### Example
 
 The following example creates a `Group` that renders as a cube, defined by 6 `Rectangle` objects (one for each side of the cube):
 
@@ -192,20 +192,20 @@ cube = Group([
 ])
 ```
 
-#### Box
+### Box
 
-#### Prism
+### Prism
 
-#### Texture
+### Texture
 
-#### HatchTexture
+### HatchTexture
 
-#### FillTexture
+### FillTexture
 
-## Contributing
+# Contributing
 
 Pull requests are welcome.
 
-## License
+# License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
