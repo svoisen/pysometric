@@ -4,7 +4,7 @@ from .scene import DIMETRIC_ANGLE, Scene
 from .shape import Group, Polygon, Rectangle, RegularPolygon, Renderable, Rotation
 from .texture import FillTexture, HatchTexture
 from .vector import Vector2, Vector3
-from .volume import Box, Prism
+from .volume import Box, Prism, Pyramid
 
 __all__ = [
     "Axis",
@@ -15,6 +15,7 @@ __all__ = [
     "Plane",
     "Polygon",
     "Prism",
+    "Pyramid",
     "Rectangle",
     "RegularPolygon",
     "Renderable",
