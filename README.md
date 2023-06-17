@@ -4,6 +4,8 @@ Pysometric is a simple Python library for creating isometric drawings that can b
 
 It is currently intended to be used in conjunction with the [vsketch](https://github.com/abey79/vsketch/) generative toolkit (though this dependency may be removed in the future).
 
+<img src="https://i.imgur.com/247GGvX.png" alt="cube, pyramid and hexagonal prism" width="372">
+
 ## Features
 
 * Renders 2D rectangles and polygons in 3D isometric projection
