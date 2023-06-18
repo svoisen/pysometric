@@ -1,6 +1,6 @@
 # Pysometric
 
-Pysometric is a simple Python library for creating isometric drawings that can be rendered to SVG, typically for use with pen plotters. 
+Pysometric is a simple Python library for creating isometric 3D line art that can be rendered to SVG, typically for use with pen plotters. 
 
 It is currently intended to be used in conjunction with the [vsketch](https://github.com/abey79/vsketch/) generative toolkit (though this dependency may be removed in the future).
 
