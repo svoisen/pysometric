@@ -16,10 +16,10 @@ class Scene:
     """
 
     def __init__(
-        self, frame: Polygon, unit_size: float, children: list[Renderable], origin="centroid", clip_to_frame=True
+        self, frame: Polygon, grid_pitch: float, children: list[Renderable], origin="centroid", clip_to_frame=True
     ):
         super().__init__()
-        self.render_context = RenderContext(frame, unit_size, DIMETRIC_ANGLE, origin)
+        self.render_context = RenderContext(frame, grid_pitch, DIMETRIC_ANGLE, origin)
         self._children: list[Renderable] = children
         self.__clips_children_to_frame = clip_to_frame
 
