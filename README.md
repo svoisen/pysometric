@@ -196,6 +196,44 @@ cube = Group([
 
 ### Box
 
+A `Box` defines a rectangular cuboid in 3D space.
+
+Boxes have a width, depth and height dimension.
+
+#### Initialization
+
+A `Box` is initialized with:
+
+* `origin`: The (x, y, z) coordinates of the bottom left front corner of the box defined as a Vector3.
+* `width`: The width of the box.
+* `depth`: The depth of the box.
+* `height`: The height of the box.
+* `top`: Optional dictionary containing:
+    * `textures`: A list of Texture objects to apply to the top face.
+    * `layer`: The render layer for the top face.
+* `left`: Optional dictionary containing:
+    * textures: A list of Texture objects to apply to the left face.
+    * `layer`: The render layer for the left face.
+* `right`: Optional dictionary containing:
+    * textures: A list of Texture objects to apply to the right face.
+    * layer: The render layer for the right face.
+
+#### Example
+
+The following example creates a box with width 2, depth 3 and height 4 centered at (1, 1, 1) with:
+
+* A hatch texture on the top face
+* The left face rendered on layer 2
+* A fill texture on the right face
+
+```python
+box = Box((1, 1, 1), 2, 3, 4, 
+    top={"textures": [HatchTexture(4)]},
+    left={"layer": 2}, 
+    right={"textures": [FillTexture()]}
+)
+```
+
 ### Prism
 
 ### Texture
