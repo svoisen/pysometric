@@ -13,6 +13,14 @@ It is currently intended to be used in conjunction with the [vsketch](https://gi
 * Supports textures (e.g. hatch and solid fills) on any polygon
 * Automatically occludes lines (hidden line removal) based on scene z-order
 
+# Release Notes
+
+## Version 0.0.2 (Current)
+* Adds support for circles using the `Circle` class
+
+## Version 0.0.1
+* Initial release
+
 # Getting Started
 
 ## Required dependencies
@@ -234,13 +242,27 @@ box = Box((1, 1, 1), 2, 3, 4,
 )
 ```
 
-### Prism
+### Circle
 
-### Texture
+A `Circle` defines an isometric circle in 3D space.
 
-### HatchTexture
+### Initialization
 
-### FillTexture
+A `Circle` is initialized with:
+
+* `center`: A Vector3 specifying the 3D center point of the circle.
+* `radius`: The radius of the circle.
+* `orientation`: The plane in which the circle lies. Must be one of `Plane.XY`, `Plane.XZ` or `Plane.YZ`.
+* `num_segments`: Circles are approximated using a series of straight line segments. The higher the number of segments, the smoother the circle at the cost of higher rendering cost.
+* `textures`: Optional list of `Texture` objects to apply to the circle.
+* `rotations`: Optional list of `Rotation` objects to rotate the circle.
+* `layer`: The layer for the rectangle. Default is 1.
+
+#### Example
+
+```python
+circle = Circle((5, 10, 15), 5, Plane.XY)
+```
 
 # Contributing
 

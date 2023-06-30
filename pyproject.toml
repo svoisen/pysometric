@@ -7,7 +7,7 @@ name = "pysometric"
 authors = [
     { name = "Sean Voisen", email = "sean@voisen.org" },
 ]
-version = "0.0.1"
+version = "0.0.2"
 description = "Isometric SVG drawing library." 
 requires-python = ">=3.10"
 dependencies = [

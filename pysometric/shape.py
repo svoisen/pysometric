@@ -245,6 +245,21 @@ class Rectangle(Polygon):
         return self._height
 
 
+class Circle(Polygon):
+    def __init__(
+        self,
+        center: Vector3,
+        radius: float,
+        orientation: Plane,
+        num_segments = 64,
+        textures: list[Texture] = [],
+        rotations: list[Rotation] = [],
+        layer=1,
+    ):
+        vertices = _regular_polygon_vertices(center, num_segments, radius, orientation)
+        super().__init__(vertices, textures, rotations, layer)
+
+
 class Group:
     def __init__(self, children: list[Renderable]) -> None:
         self._children = children
